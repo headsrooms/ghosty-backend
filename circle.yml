@@ -14,15 +14,13 @@ machine:
     - docker
 
 dependencies:
-  pre:
-    - echo "address=/dev/127.0.0.1" | sudo tee -a /etc/dnsmasq.conf
-    - sudo /etc/init.d/dnsmasq restart
-    - echo "nameserver 127.0.0.1" | sudo tee /etc/resolv.conf
   override:
     - docker-compose build
     - docker-compose up -d
     - docker-compose stop
     - docker-compose start
+    - sleep 40
+    - curl --retry 10 --retry-delay 5 -v http://localhost:8000
 
 test:
   override:
