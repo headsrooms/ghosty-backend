@@ -1,5 +1,8 @@
 ## Customize the test machine
 machine:
+  pre:
+   - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+   - sudo pip install docker-compose
 
   timezone:
     Europe/Madrid # Set the timezone
@@ -9,7 +12,6 @@ machine:
 
 dependencies:
   override:
-    - sudo pip install docker-compose
     - sudo pip install --upgrade six # fix error with docker-compose
     - docker-compose build
     - docker-compose up -d
