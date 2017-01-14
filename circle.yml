@@ -6,6 +6,7 @@ machine:
    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
    - sudo pip install docker-compose
    - sudo pip install --upgrade six # fix error with docker-compose
+   - npm install -g newman
 
   timezone:
     Europe/Madrid # Set the timezone
@@ -24,8 +25,7 @@ dependencies:
 
 test:
   override:
-    - docker pull postman/newman_ubuntu1404
-    - docker run -t postman/newman_ubuntu1404 run https://www.getpostman.com/collections/fab4945fc8878f2eefe8
+    - newman run https://www.getpostman.com/collections/fab4945fc8878f2eefe8
 
 deployment:
   production:
