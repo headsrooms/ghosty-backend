@@ -9,6 +9,8 @@ machine:
 
 dependencies:
   override:
+    - sudo pip install docker-compose
+    - sudo pip install --upgrade six # fix error with docker-compose
     - docker-compose build
     - docker-compose up -d
     - docker-compose stop
