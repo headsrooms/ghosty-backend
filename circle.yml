@@ -1,0 +1,26 @@
+## Customize the test machine
+machine:
+
+  timezone:
+    Europe/Madrid # Set the timezone
+
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker-compose build
+    - docker-compose up -d
+    - docker-compose stop
+    - docker-compose start
+
+test:
+  override:
+    - docker pull postman/newman_ubuntu1404
+    - docker run -t postman/newman_ubuntu1404 --url="https://www.getpostman.com/collections/fab4945fc8878f2eefe8"
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - ./deploy.sh
