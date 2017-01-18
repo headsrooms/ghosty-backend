@@ -15,16 +15,11 @@ from .serializers import UserSerializer, WorkSerializer, CustomerSerializer, Tas
 
 @parser_classes((JSONParser, FormParser, MultiPartParser))
 class UserViewSet(CreateModelMixin,
-                  ListModelMixin,
-                  RetrieveModelMixin,
-                  UpdateModelMixin,
-                  DestroyModelMixin,
                   viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     renderer_classes = (JSONRenderer,)
-    permission_classes = (permissions.IsAuthenticated, TokenHasReadWriteScope)
-    authentication_classes = (OAuth2Authentication,)
+    permission_classes = (permissions.AllowAny,)
 
 
 @parser_classes((JSONParser, FormParser, MultiPartParser))
@@ -36,7 +31,7 @@ class WorkViewSet(viewsets.ModelViewSet):
     queryset = Work.objects.all()
     serializer_class = WorkSerializer
     permission_classes = (permissions.IsAuthenticated, TokenHasReadWriteScope)
-    authentication_classes = (OAuth2Authentication, )
+    authentication_classes = (OAuth2Authentication,)
 
 
 @parser_classes((JSONParser, FormParser, MultiPartParser))
