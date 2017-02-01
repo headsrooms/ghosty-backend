@@ -24,17 +24,20 @@ SECRET_KEY = 'u#l8&&)2^#8=9zfq2pqa4&%e&6#%tvp562zy37enrvqe6b^v48'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['web']
+ALLOWED_HOSTS = ['web', '127.0.0.1']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'material',
+    'material.admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'geoposition',
     'oauth2_provider',
     'rest_framework',
     'reversion',
@@ -108,8 +111,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        #'PASSWORD': 'admin',
-        'HOST': 'db',
+        'PASSWORD': 'admin',    # con docker comentado
+        #'HOST': 'db',  # docker
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -137,19 +141,21 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-es'
 
-TIME_ZONE = 'Europe/Madrid'
-
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
 
+TIME_ZONE = 'UTC'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/media'
 
 # Security
 
@@ -158,3 +164,14 @@ STATIC_ROOT = '/static/'
 # # CSRF_COOKIE_SECURE = True
 # SECURE_HSTS_SECONDS = 31536000
 # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# Maps
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDN-0vGw5tCAY9oFOtgcnG-jGC3UHhZfAg'
+GEOPOSITION_MAP_OPTIONS = {
+    'minZoom': 3,
+    'maxZoom': 15,
+}
+
+GEOPOSITION_MARKER_OPTIONS = {
+    'cursor': 'move'
+}

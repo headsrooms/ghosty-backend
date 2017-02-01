@@ -1,7 +1,6 @@
+from Ghosty_API.models import Work, Task, Deceased
 from django.contrib.auth.models import User
 from rest_framework import serializers
-
-from Ghosty_API.models import Work, Task, Customer, Assignment
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,13 +21,7 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CustomerSerializer(serializers.ModelSerializer):
+class DeceasedSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Customer
-        fields = '__all__'
-
-
-class AssignmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Assignment
+        model = Deceased
         fields = '__all__'
