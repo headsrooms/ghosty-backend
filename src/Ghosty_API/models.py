@@ -110,10 +110,6 @@ class Task(models.Model):
 
 @reversion.register()
 class Move(Task):
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('name').default = "Traslado"
-        super(Move, self).__init__(*args, **kwargs)
-
     exit_place_1 = models.CharField(verbose_name="Lugar de salida", max_length=50)
     exit_time_1 = models.DateField(verbose_name="Fecha de salida", blank=True, null=True)
     arrival_place_1 = models.CharField(verbose_name="Lugar de llegada", max_length=50)
@@ -151,10 +147,6 @@ class MorgueBusiness(models.Model):
 
 @reversion.register()
 class Morgue(Task):
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('name').default = "Tanatorio"
-        super(Morgue, self).__init__(*args, **kwargs)
-
     business = models.ForeignKey(MorgueBusiness, verbose_name="Empresa", blank=True, null=True)
     arrival_date = models.DateField(verbose_name="Fecha Entrada", blank=True, null=True)
     exit_date = models.DateField(verbose_name="Fecha Salida", blank=True, null=True)
@@ -182,10 +174,6 @@ class ChurchPlace(models.Model):
 
 @reversion.register()
 class Church(Task):
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('name').default = "Parroquia"
-        super(Church, self).__init__(*args, **kwargs)
-
     church_place = models.ForeignKey(ChurchPlace, verbose_name="Iglesia", blank=True, null=True)
     undertaker = models.CharField(verbose_name="Funeraria", blank=True, null=True, max_length=20)
     time = models.DateTimeField(verbose_name="Fecha y hora", blank=True, null=True)
@@ -200,37 +188,40 @@ class Church(Task):
 
 @reversion.register()
 class Cemetery(Task):
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('name').default = "Cementerio"
-        super(Cemetery, self).__init__(*args, **kwargs)
+    CREMACION, INHUMACION = range(0, 2)
+    ALQUILER, PERPETUIDAD = range(0, 2)
+    REDUCCION, TRASLADO = range(0, 2)
+    APERTURA, NUEVO_FAMILIA, NUEVO_CIA = range(0, 3)
+    PRIMERA, SEGUNDA, TERCERA = range(0, 3)
+
+    TYPES = ((CREMACION, "Cremación"), (INHUMACION, "Inhumación"))
+    NICHES = ((APERTURA, "Apertura"), (NUEVO_FAMILIA, "Nuevo Familia"), (NUEVO_CIA, "Nuevo CIA"))
+    TITLES = ((ALQUILER, "Alquiler"), (PERPETUIDAD, "Perpetuidad"))
+    BURIALS = ((PRIMERA, "1ª"), (SEGUNDA, "2ª"), (TERCERA, "3ª"))
+    RESTS = ((REDUCCION, "Reducción"), (TRASLADO, "Traslado"))
 
     town = models.CharField(verbose_name="Población", max_length=20, blank=True, null=True)
     burial_date = models.DateField(verbose_name="Fecha Inhumación", blank=True, null=True)
-    type = models.CharField(verbose_name="Tipo", choices=((0, "Cremación"), (1, "Inhumación")), max_length=20,
-                            default=0)
-    niche = models.CharField(verbose_name="Nicho", choices=((0, "Apertura"), (1, "Nuevo Familia"), (2, "Nuevo CIA")),
-                             max_length=20, default=0)
-    title = models.CharField(verbose_name="Título", choices=((0, "Alquiler"), (1, "Perpetuidad")), max_length=20,
-                             default=0)
-    burial = models.CharField(verbose_name="Título", choices=((0, "1ª"), (1, "2ª"), (2, "3ª")), max_length=5,
-                              default=0)
-    rest = models.CharField(verbose_name="Restos", choices=((0, "Reducción"), (1, "Traslado")), max_length=10,
-                            default=0)
+    type = models.IntegerField(verbose_name="Tipo", choices=TYPES,
+                               default=0)
+    niche = models.IntegerField(verbose_name="Nicho", choices=NICHES, default=0)
+    title = models.IntegerField(verbose_name="Título", choices=TITLES,
+                                default=0)
+    burial = models.IntegerField(verbose_name="Inhumación", choices=BURIALS,
+                                 default=0)
+    rest = models.IntegerField(verbose_name="Restos", choices=RESTS,
+                               default=0)
 
     def __str__(self):
         return str(self.town) + " " + str(self.burial_date)
 
     class Meta:
-        verbose_name = "Cementerio/Crem."
-        verbose_name_plural = "Cementerios/Crem."
+        verbose_name = "Cementerio/\nCrematorio"
+        verbose_name_plural = "Cementerios/\nCrematorios"
 
 
 @reversion.register()
 class Florist(Task):
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('name').default = "Floristería"
-        super(Florist, self).__init__(*args, **kwargs)
-
     company = models.BooleanField(verbose_name="Compañía", default=False)
     family = models.BooleanField(verbose_name="Familia", default=False)
     wreath = models.BooleanField(verbose_name="Corona", default=False)
