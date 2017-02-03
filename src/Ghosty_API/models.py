@@ -51,7 +51,7 @@ class Deceased(models.Model):
     judicial = models.BooleanField(verbose_name="Judicial", default=False)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name) + " " + str(self.nif) + " " + str(self.death_date)
 
     class Meta:
         verbose_name = "Fallecido"
@@ -101,7 +101,7 @@ class Task(models.Model):
     name_location.short_description = "Localización"
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name) + " a cargo de " + str(self.responsible)
 
     class Meta:
         verbose_name = "Tarea"
@@ -274,30 +274,45 @@ class FloristWork(models.Model):
 
 @reversion.register()
 class Taxi(Task):
+    def __str__(self):
+        return "Taxi "
+
     class Meta:
         verbose_name = "Taxi"
 
 
 @reversion.register()
 class Obituary(Task):
+    def __str__(self):
+        return "Esquela "
+
     class Meta:
         verbose_name = "Esquela"
 
 
 @reversion.register()
 class MiniTombstone(Task):
+    def __str__(self):
+        return "Minilápida "
+
     class Meta:
         verbose_name = "Minilápida"
 
 
 @reversion.register()
 class Chair(Task):
+    def __str__(self):
+        return "Silla "
+
     class Meta:
         verbose_name = "Silla"
 
 
 @reversion.register()
 class Tap(Task):
+    def __str__(self):
+        return "Tapa frigorífica "
+
     class Meta:
         verbose_name = "Tapa frigorífica"
         verbose_name_plural = "Tapas frigoríficas"
@@ -305,6 +320,9 @@ class Tap(Task):
 
 @reversion.register()
 class Tombstone(Task):
+    def __str__(self):
+        return "Lápida "
+
     class Meta:
         verbose_name = "Lápida"
 
