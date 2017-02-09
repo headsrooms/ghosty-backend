@@ -115,17 +115,13 @@ class Move(Task):
     arrival_place_1 = models.CharField(verbose_name="Lugar de llegada", max_length=50)
     arrival_time_1 = models.DateField(verbose_name="Fecha de llegada", blank=True, null=True)
     exit_place_2 = models.CharField(verbose_name="Lugar de salida-2", max_length=50, blank=True, null=True)
-    exit_time_1 = models.DateField(verbose_name="Fecha de salida-2", blank=True, null=True)
+    exit_time_2 = models.DateField(verbose_name="Fecha de salida-2", blank=True, null=True)
     arrival_place_2 = models.CharField(verbose_name="Lugar de llegada-2", max_length=50, blank=True, null=True)
-    arrival_time_2 = models.DateField(verbose_name="Fecha de llegada", blank=True, null=True)
+    arrival_time_2 = models.DateField(verbose_name="Fecha de llegada-2", blank=True, null=True)
 
     def __str__(self):
-        if self.exit_time_1 is not None:
-            return "Traslados con salida el " + str(self.exit_time_1) + " desde "
-            str(self.exit_place_1) + " a " + str(self.arrival_place_1)
-        else:
-            return "Traslados con salida desde "
-            str(self.exit_place_1) + " a " + str(self.arrival_place_1)
+        return "Traslados con salida el " + str(self.exit_time_1) + " desde "
+        str(self.exit_place_1) + " a " + str(self.arrival_place_1)
 
     class Meta:
         verbose_name = "Traslado"

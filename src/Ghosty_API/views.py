@@ -5,7 +5,7 @@ from oauth2_provider.ext.rest_framework import TokenHasReadWriteScope
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.decorators import parser_classes
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from rest_framework.renderers import JSONRenderer
 
@@ -13,7 +13,7 @@ from .serializers import UserSerializer, WorkSerializer, DeceasedSerializer, Tas
 
 
 @parser_classes((JSONParser, FormParser, MultiPartParser))
-class UserViewSet(CreateModelMixin,
+class UserViewSet(CreateModelMixin, UpdateModelMixin,
                   viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
