@@ -11,6 +11,10 @@ class DeceasedAdmin(VersionAdmin):
     list_display = ("name", "nif", "city", "death_date")
 
 
+class WorkInline(admin.StackedInline):
+    model = Work
+
+
 @admin.register(Work)
 class WorkAdmin(VersionAdmin):
     icon = '<i class="material-icons">work</i>'
@@ -28,6 +32,7 @@ class TaskAdmin(VersionAdmin):
 class MoveAdmin(VersionAdmin):
     icon = '<i class="material-icons">directions_car</i>'
     list_display = ("exit_place_1", "exit_time_1", "arrival_place_1", "arrival_time_1")
+    # inlines = [WorkInline, ]
 
 
 @admin.register(Morgue)

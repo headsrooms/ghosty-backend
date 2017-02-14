@@ -19,6 +19,7 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = DefaultRouter(trailing_slash=False)
@@ -32,6 +33,8 @@ urlpatterns = [
                   url(r'^api/', include(router.urls, namespace='api')),
                   url(r'^admin/', admin.site.urls),
                   url(r'^docs/', include('rest_framework_docs.urls')),
-                  url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+                  url(r'^api-token-auth/', obtain_jwt_token),
+                  url(r'^api-token-refresh/', refresh_jwt_token),
+                  url(r'^api-token-verify/', verify_jwt_token),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
               static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

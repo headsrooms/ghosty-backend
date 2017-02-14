@@ -1,7 +1,7 @@
 Django
 gunicorn
 psycopg2
-django-oauth-toolkit
+djangorestframework-jwt
 djangorestframework
 django_reversion
 drfdocs
@@ -10,3 +10,4 @@ djangorestframework-jsonapi
 django-geoposition
 django-material
 geocoder
+django-filter
