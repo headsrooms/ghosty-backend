@@ -15,15 +15,15 @@ from geoposition.fields import GeopositionField
 
 @reversion.register()
 class Deceased(models.Model):
-    SINGLE = 'Soltero'
-    MARRIED = 'Casado'
-    DIVORCED = 'Divorciado',
-    WIDOWER = 'Viudo'
+    SINGLE = "Soltero"
+    MARRIED = "Casado"
+    DIVORCED = "Divorciado"
+    WIDOWER = "Viudo"
     CIVIL_STATES = (
-        (SINGLE, 'Soltero'),
-        (MARRIED, 'Casado'),
-        (DIVORCED, 'Divorciado'),
-        (WIDOWER, 'Viudo'),
+        (SINGLE, "Soltero"),
+        (MARRIED, "Casado"),
+        (DIVORCED, "Divorciado"),
+        (WIDOWER, "Viudo"),
     )
     name = models.CharField(verbose_name="Nombre", max_length=50)
     nif = models.CharField(verbose_name="NIF", blank=True, null=True, max_length=50, )
@@ -60,18 +60,18 @@ class Deceased(models.Model):
 
 @reversion.register()
 class Task(models.Model):
-    CANCELLED = 'Cancelado'
-    NOT_ASSIGNED = 'Sin asignar'
-    PENDING = 'Pendiente'
-    WIP = 'En progreso'
-    DONE = 'Hecho'
+    CANCELLED = "Cancelado"
+    NOT_ASSIGNED = "Sin asignar"
+    PENDING = "Pendiente"
+    WIP = "En progreso"
+    DONE = "Hecho"
 
     STATES = (
-        (CANCELLED, 'Cancelado'),
-        (NOT_ASSIGNED, 'Sin asignar'),
-        (PENDING, 'Pendiente'),
-        (WIP, 'En proceso'),
-        (DONE, 'Hecho'),
+        (CANCELLED, "Cancelado"),
+        (NOT_ASSIGNED, "Sin asignar"),
+        (PENDING, "Pendiente"),
+        (WIP, "En proceso"),
+        (DONE, "Hecho"),
     )
     name = models.CharField(verbose_name="Nombre", max_length=50, blank=True, null=True)
     details = models.CharField(verbose_name="Detalles", blank=True, null=True, max_length=100)
