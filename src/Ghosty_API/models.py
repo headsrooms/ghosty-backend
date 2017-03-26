@@ -4,7 +4,7 @@ import geocoder
 import reversion
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.utils import timezone
 from django.utils.html import format_html
 from geoposition.fields import GeopositionField
@@ -436,10 +436,6 @@ def assign_task(sender, instance, **kwargs):
     if instance.responsible is not None and instance.status is Task.NOT_ASSIGNED or None:
         instance.status = Task.WIP
         instance.save()
-    else:
-        if instance.responsible is None and instance.status is not Task.NOT_ASSIGNED:
-            instance.status = Task.NOT_ASSIGNED
-            instance.save()
 
 
 post_save.connect(complete_task, sender=Task, dispatch_uid="update_complete_task")
