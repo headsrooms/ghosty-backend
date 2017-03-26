@@ -15,10 +15,10 @@ from geoposition.fields import GeopositionField
 
 @reversion.register()
 class Deceased(models.Model):
-    SINGLE = 'SI'
-    MARRIED = 'MA'
-    DIVORCED = 'DI',
-    WIDOWER = 'WI'
+    SINGLE = 'Soltero'
+    MARRIED = 'Casado'
+    DIVORCED = 'Divorciado',
+    WIDOWER = 'Viudo'
     CIVIL_STATES = (
         (SINGLE, 'Soltero'),
         (MARRIED, 'Casado'),
@@ -60,7 +60,11 @@ class Deceased(models.Model):
 
 @reversion.register()
 class Task(models.Model):
-    CANCELLED, NOT_ASSIGNED, PENDING, WIP, DONE = range(0, 5)
+    CANCELLED = 'Cancelado'
+    NOT_ASSIGNED = 'Sin asignar'
+    PENDING = 'Pendiente'
+    WIP = 'En progreso'
+    DONE = 'Hecho'
 
     STATES = (
         (CANCELLED, 'Cancelado'),
@@ -74,7 +78,7 @@ class Task(models.Model):
     location = GeopositionField(verbose_name="Localización", blank=True, null=True)
     attachment = models.FileField(verbose_name="Adjunto", upload_to='/media/uploads/%Y/%m/%d/', blank=True, null=True)
     done_date = models.DateField(verbose_name="Fecha de realización", blank=True, null=True)
-    status = models.IntegerField(verbose_name="Estado", choices=STATES, default=NOT_ASSIGNED)
+    status = models.CharField(verbose_name="Estado", choices=STATES, max_length=20, default=NOT_ASSIGNED)
     responsible = models.ForeignKey(User, verbose_name="Responsable", blank=True, null=True)
 
     def shorten_attachment(self):
@@ -362,9 +366,9 @@ class SonOrBeneficiary(models.Model):
 
 @reversion.register()
 class Work(models.Model):
-    OPEN = 'AB'
-    CLOSED = 'CE'
-    FINISHED = 'TE'
+    OPEN = 'Abierto'
+    CLOSED = 'Cerrado'
+    FINISHED = 'Terminado'
     STATES = (
         (OPEN, 'Abierto'),
         (FINISHED, 'Terminado'),
@@ -377,7 +381,7 @@ class Work(models.Model):
     morgue = models.OneToOneField(Morgue, verbose_name="Tanatorio", blank=True, null=True)
     church = models.OneToOneField(Church, verbose_name="Parroquia", blank=True, null=True)
     cemetery = models.OneToOneField(Cemetery, verbose_name="Cementerio/Crematorio", blank=True, null=True)
-    florist = models.OneToOneField(FloristWork, verbose_name="Floristería", blank=True, null=True)
+    florist_work = models.OneToOneField(FloristWork, verbose_name="Floristería", blank=True, null=True)
 
     sons_and_beneficiaries = models.ManyToManyField(SonOrBeneficiary, verbose_name="Hijos y beneficiarios",
                                                     blank=True)

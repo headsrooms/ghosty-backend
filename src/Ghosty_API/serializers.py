@@ -23,6 +23,7 @@ class WorkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Work
         fields = '__all__'
+        depth = 2
 
 
 class TaskSerializer(serializers.ModelSerializer):
