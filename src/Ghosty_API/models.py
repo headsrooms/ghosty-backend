@@ -1,3 +1,4 @@
+from enum import Enum
 from os.path import basename
 
 import datetime
@@ -61,25 +62,20 @@ class Deceased(models.Model):
 
 @reversion.register()
 class Task(models.Model):
-    CANCELLED = "Cancelado"
-    NOT_ASSIGNED = "Sin asignar"
-    PENDING = "Pendiente"
-    WIP = "En progreso"
-    DONE = "Hecho"
 
-    STATES = (
-        (CANCELLED, "Cancelado"),
-        (NOT_ASSIGNED, "Sin asignar"),
-        (PENDING, "Pendiente"),
-        (WIP, "En proceso"),
-        (DONE, "Hecho"),
-    )
+    class TaskStates(Enum):
+        CANCELLED = "Cancelado"
+        NOT_ASSIGNED = "Sin asignar"
+        PENDING = "Pendiente"
+        WIP = "En proceso"
+        DONE = "Hecho"
+
     name = models.CharField(verbose_name="Nombre", max_length=50, blank=True, null=True)
     details = models.CharField(verbose_name="Detalles", blank=True, null=True, max_length=100)
     location = GeopositionField(verbose_name="Localización", blank=True, null=True)
     attachment = models.FileField(verbose_name="Adjunto", upload_to='/media/uploads/%Y/%m/%d/', blank=True, null=True)
     done_date = models.DateField(verbose_name="Fecha de realización", blank=True, null=True)
-    status = models.CharField(verbose_name="Estado", choices=STATES, max_length=20, default=NOT_ASSIGNED)
+    status = models.CharField(verbose_name="Estado", choices=TaskStates, max_length=20, default=TaskStates.NOT_ASSIGNED)
     responsible = models.ForeignKey(User, verbose_name="Responsable", blank=True, null=True)
 
     def shorten_attachment(self):
@@ -434,8 +430,8 @@ def complete_task(sender, instance, **kwargs):
 
 
 def assign_task(sender, instance, **kwargs):
-    if instance.responsible is not None and instance.status is Task.NOT_ASSIGNED or None:
-        instance.status = Task.WIP
+    if instance.responsible is not None and instance.status is Task.TaskStates.NOT_ASSIGNED:
+        instance.status = Task.TaskStates.WIP
         instance.save()
 
 
