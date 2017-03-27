@@ -413,7 +413,7 @@ class Work(models.Model):
 
 
 def complete_task(sender, instance, **kwargs):
-    if instance.status is Task.DONE:
+    if instance.status is Task.TaskStates.DONE:
         instance.done_date = timezone.now()
         instance.save()
 
