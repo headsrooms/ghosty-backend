@@ -2,6 +2,7 @@ import datetime
 from enum import Enum
 from os.path import basename
 
+from django.utils import timezone
 import geocoder
 import reversion
 from django.contrib.auth.models import User
@@ -376,7 +377,7 @@ class Work(models.Model):
         (FINISHED, 'Terminado'),
         (CLOSED, 'Cerrado'),
     )
-    a24h = models.CharField(verbose_name="A24H", max_length=50, unique=True, default=datetime.datetime.now())
+    a24h = models.CharField(verbose_name="A24H", max_length=50, unique=True, default=timezone.now)
     employed = models.ForeignKey(User, verbose_name="Empleado", blank=True, null=True)
     deceased = models.OneToOneField(Deceased, verbose_name="Fallecido", blank=True, null=True)
     move = models.OneToOneField(Move, verbose_name="Traslados", blank=True, null=True)
@@ -398,7 +399,7 @@ class Work(models.Model):
     declarant = models.ForeignKey(Declarant, verbose_name="Contratante declarante", blank=True, null=True)
 
     status = models.CharField(verbose_name="Estado", max_length=10, choices=STATES, default=OPEN)
-    creation_date = models.DateField(verbose_name="Fecha de creación", default=datetime.datetime.now())
+    creation_date = models.DateField(verbose_name="Fecha de creación", default=timezone.now)
     finish_date = models.DateField(verbose_name="Fecha de finalización", blank=True, null=True)
     comment = models.TextField(verbose_name="Observaciones", blank=True, null=True)
 
@@ -413,7 +414,7 @@ class Work(models.Model):
 
 def complete_task(sender, instance, **kwargs):
     if instance.status is Task.DONE:
-        instance.done_date = datetime.datetime.now()
+        instance.done_date = timezone.now()
         instance.save()
 
 
