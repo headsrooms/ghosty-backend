@@ -374,7 +374,7 @@ class Work(models.Model):
         (FINISHED, 'Terminado'),
         (CLOSED, 'Cerrado'),
     )
-    a24h = models.CharField(verbose_name="A24H", max_length=50, unique=True, default=timezone.now())
+    a24h = models.CharField(verbose_name="A24H", max_length=50, unique=True, default=timezone.now)
     employed = models.ForeignKey(User, verbose_name="Empleado", blank=True, null=True)
     deceased = models.OneToOneField(Deceased, verbose_name="Fallecido", blank=True, null=True)
     move = models.OneToOneField(Move, verbose_name="Traslados", blank=True, null=True)
@@ -433,7 +433,7 @@ def complete_task(sender, instance, **kwargs):
 
 
 def assign_task(sender, instance, **kwargs):
-    if instance.responsible is not None and instance.status is Task.NOT_ASSIGNED or None:
+    if instance.responsible is not None and instance.status is Task.NOT_ASSIGNED:
         instance.status = Task.WIP
         instance.save()
     else:
