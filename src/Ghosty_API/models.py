@@ -1,15 +1,20 @@
+import datetime
 from enum import Enum
 from os.path import basename
 
-import datetime
 import geocoder
 import reversion
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save, pre_save
-from django.utils import timezone
+from django.db.models.signals import post_save
 from django.utils.html import format_html
 from geoposition.fields import GeopositionField
+
+
+class ChoiceEnum(Enum):
+    @classmethod
+    def choices(cls):
+        return tuple((attr.name, attr.value) for attr in cls)
 
 
 # Create your models here.
@@ -62,8 +67,7 @@ class Deceased(models.Model):
 
 @reversion.register()
 class Task(models.Model):
-
-    class TaskStates(Enum):
+    class TaskStates(ChoiceEnum):
         CANCELLED = "Cancelado"
         NOT_ASSIGNED = "Sin asignar"
         PENDING = "Pendiente"
@@ -75,7 +79,8 @@ class Task(models.Model):
     location = GeopositionField(verbose_name="Localización", blank=True, null=True)
     attachment = models.FileField(verbose_name="Adjunto", upload_to='/media/uploads/%Y/%m/%d/', blank=True, null=True)
     done_date = models.DateField(verbose_name="Fecha de realización", blank=True, null=True)
-    status = models.CharField(verbose_name="Estado", choices=TaskStates, max_length=20, default=TaskStates.NOT_ASSIGNED)
+    status = models.CharField(verbose_name="Estado", choices=TaskStates.choices(), max_length=20,
+                              default=TaskStates.NOT_ASSIGNED)
     responsible = models.ForeignKey(User, verbose_name="Responsable", blank=True, null=True)
 
     def shorten_attachment(self):
