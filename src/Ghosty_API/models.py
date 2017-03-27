@@ -445,3 +445,4 @@ def assign_task(sender, instance, **kwargs):
 post_save.connect(complete_task, sender=Task, dispatch_uid="update_complete_task")
 # post_save.connect(finish_work, sender=Task, dispatch_uid="update_finished_work")
 post_save.connect(assign_task, sender=Task, dispatch_uid="update_assigned_task")
+
