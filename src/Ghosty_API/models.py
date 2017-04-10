@@ -77,8 +77,8 @@ class Task(models.Model):
     details = models.CharField(verbose_name="Detalles", blank=True, null=True, max_length=100)
     location = GeopositionField(verbose_name="Localización", blank=True, null=True)
     attachment = models.FileField(verbose_name="Adjunto", upload_to='/media/uploads/%Y/%m/%d/', blank=True, null=True)
-    added_date = models.DateField(verbose_name="Añadido", auto_now_add=True)
-    last_modified = models.DateField(verbose_name="Última modificación", blank=True, auto_now=True)
+    added_date = models.DateTimeField(verbose_name="Añadido", auto_now_add=True)
+    last_modified = models.DateTimeField(verbose_name="Última modificación", blank=True, auto_now=True)
     status = models.CharField(verbose_name="Estado", choices=STATES, max_length=20, default=NOT_ASSIGNED)
     responsible = models.ForeignKey(User, verbose_name="Responsable", blank=True, null=True)
 
