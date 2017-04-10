@@ -51,7 +51,7 @@ class Deceased(models.Model):
     judicial = models.BooleanField(verbose_name="Judicial", default=False)
 
     def __str__(self):
-        return str(self.name) + " " + str(self.nif) + " " + str(self.death_date)
+        return "{0} {1} {2}".format(str(self.name), str(self.nif), str(self.death_date))
 
     class Meta:
         verbose_name = "Fallecido"
@@ -77,7 +77,8 @@ class Task(models.Model):
     details = models.CharField(verbose_name="Detalles", blank=True, null=True, max_length=100)
     location = GeopositionField(verbose_name="Localización", blank=True, null=True)
     attachment = models.FileField(verbose_name="Adjunto", upload_to='/media/uploads/%Y/%m/%d/', blank=True, null=True)
-    done_date = models.DateField(verbose_name="Fecha de realización", blank=True, null=True)
+    added_date = models.DateField(verbose_name="Añadido", auto_now_add=True)
+    last_modified = models.DateField(verbose_name="Última modificación", blank=True, auto_now=True)
     status = models.CharField(verbose_name="Estado", choices=STATES, max_length=20, default=NOT_ASSIGNED)
     responsible = models.ForeignKey(User, verbose_name="Responsable", blank=True, null=True)
 
@@ -105,9 +106,10 @@ class Task(models.Model):
     name_location.short_description = "Localización"
 
     def __str__(self):
-        return str(self.name) + " a cargo de " + str(self.responsible)
+        return "{0} a cargo de {1}".format(str(self.name), str(self.responsible))
 
     class Meta:
+        ordering = ['-last_modified', '-added_date']
         verbose_name = "Tarea"
         verbose_name_plural = "Tareas"
 
@@ -124,8 +126,9 @@ class Move(Task):
     arrival_time_2 = models.DateField(verbose_name="Fecha de llegada-2", blank=True, null=True)
 
     def __str__(self):
-        return "Traslados con salida el " + str(self.exit_time_1) + " desde "
-        str(self.exit_place_1) + " a " + str(self.arrival_place_1)
+        return "Traslados con salida el {0} desde {1} a {2}".format(str(self.exit_time_1),
+                                                                    str(self.exit_place_1),
+                                                                    str(self.arrival_place_1))
 
     class Meta:
         verbose_name = "Traslado"
@@ -152,7 +155,7 @@ class Morgue(Task):
     exit_date = models.DateField(verbose_name="Fecha Salida", blank=True, null=True)
 
     def __str__(self):
-        return str(self.business) + " " + str(self.arrival_date)
+        return "{0} {1}".format(str(self.business), str(self.arrival_date))
 
     class Meta:
         verbose_name = "Tarea Tanatorio"
@@ -213,7 +216,7 @@ class Cemetery(Task):
                                default=0)
 
     def __str__(self):
-        return str(self.town) + " " + str(self.burial_date)
+        return "{0} {1}".format(str(self.town), str(self.burial_date))
 
     class Meta:
         verbose_name = "Cementerio/\nCrematorio"
@@ -233,7 +236,7 @@ class Florist(Task):
     order_telephone = models.IntegerField(verbose_name="Teléfono pedido", blank=True, null=True)
 
     def __str__(self):
-        return str(self.order_name) + " " + str(self.order_nif)
+        return "{0} {1}".format(str(self.order_name), str(self.order_nif))
 
     class Meta:
         verbose_name = "Tarea Floristeria"
@@ -264,8 +267,8 @@ class FloristWork(models.Model):
     florist_6 = models.OneToOneField(Florist, related_name='pedido_6', verbose_name="Pedido 6", blank=True, null=True)
 
     def __str__(self):
-        return str(self.flower_provider) + " " + str(self.florist) + " " + str(self.florist_2) + " " + str(
-            self.florist_3)
+        return "{0} {1} {2} {3}".format(str(self.flower_provider), str(self.florist), str(self.florist_2), str(
+            self.florist_3))
 
     class Meta:
         verbose_name = "Trabajo \nde floristería"
@@ -342,7 +345,7 @@ class Declarant(models.Model):
     phone_contact = models.CharField(verbose_name="Teléfono/Contacto", max_length=30, blank=True, null=True)
 
     def __str__(self):
-        return str(self.name) + " " + str(self.NIF) + " " + str(self.relationship)
+        return "{0} {1} {2}".format(str(self.name), str(self.NIF), str(self.relationship))
 
     class Meta:
         verbose_name = "Contratante declarante"
@@ -357,7 +360,7 @@ class SonOrBeneficiary(models.Model):
     phone = models.CharField(verbose_name="Teléfono", max_length=10, blank=True, null=True)
 
     def __str__(self):
-        return str(self.relationship) + " " + str(self.name) + " " + str(self.phone)
+        return "{0} {1} {2}".format(str(self.relationship), str(self.name), str(self.phone))
 
     class Meta:
         verbose_name = "Hijos y beneficiarios"
@@ -401,7 +404,7 @@ class Work(models.Model):
     comment = models.TextField(verbose_name="Observaciones", blank=True, null=True)
 
     def __str__(self):
-        return str(self.a24h) + " " + str(self.deceased) + " " + str(self.creation_date)
+        return "{0} {1} {2}".format(str(self.a24h), str(self.deceased), str(self.creation_date))
 
     class Meta:
         verbose_name = "Trabajo"
@@ -411,8 +414,7 @@ class Work(models.Model):
 
 def complete_task(sender, instance, **kwargs):
     if instance.status is Task.DONE:
-        instance.done_date = timezone.now()
-        instance.save()
+        pass  # poner todos los campos no modificables
 
 
 # def finish_work(sender, instance, **kwargs):
@@ -445,4 +447,3 @@ def assign_task(sender, instance, **kwargs):
 post_save.connect(complete_task, sender=Task, dispatch_uid="update_complete_task")
 # post_save.connect(finish_work, sender=Task, dispatch_uid="update_finished_work")
 post_save.connect(assign_task, sender=Task, dispatch_uid="update_assigned_task")
-
