@@ -80,7 +80,7 @@ class Task(models.Model):
     added_date = models.DateTimeField(verbose_name="Añadido", auto_now_add=True)
     last_modified = models.DateTimeField(verbose_name="Última modificación", blank=True, auto_now=True)
     status = models.CharField(verbose_name="Estado", choices=STATES, max_length=20, default=NOT_ASSIGNED)
-    responsible = models.ForeignKey(User, verbose_name="Responsable", blank=True, null=True)
+    responsible = models.ForeignKey(User, related_name="tasks", verbose_name="Responsable", blank=True, null=True)
 
     def shorten_attachment(self):
         if self.attachment.name is not None:
@@ -150,7 +150,7 @@ class MorgueBusiness(models.Model):
 
 @reversion.register()
 class Morgue(Task):
-    business = models.ForeignKey(MorgueBusiness, verbose_name="Empresa", blank=True, null=True)
+    business = models.ForeignKey(MorgueBusiness, related_name="morgues", verbose_name="Empresa", blank=True, null=True)
     arrival_date = models.DateField(verbose_name="Fecha Entrada", blank=True, null=True)
     exit_date = models.DateField(verbose_name="Fecha Salida", blank=True, null=True)
 
@@ -177,7 +177,7 @@ class ChurchPlace(models.Model):
 
 @reversion.register()
 class Church(Task):
-    church_place = models.ForeignKey(ChurchPlace, verbose_name="Iglesia", blank=True, null=True)
+    church_place = models.ForeignKey(ChurchPlace, related_name="tasks", verbose_name="Iglesia", blank=True, null=True)
     undertaker = models.CharField(verbose_name="Funeraria", blank=True, null=True, max_length=20)
     time = models.DateTimeField(verbose_name="Fecha y hora", blank=True, null=True)
 
@@ -258,7 +258,8 @@ class FlowerProvider(models.Model):
 
 @reversion.register()
 class FloristWork(models.Model):
-    flower_provider = models.ForeignKey(FlowerProvider, verbose_name="Proveedor", blank=True, null=True)
+    flower_provider = models.ForeignKey(FlowerProvider, related_name="works", verbose_name="Proveedor", blank=True,
+                                        null=True)
     florist = models.OneToOneField(Florist, verbose_name="Pedido 1", blank=True, null=True)
     florist_2 = models.OneToOneField(Florist, related_name='pedido_2', verbose_name="Pedido 2", blank=True, null=True)
     florist_3 = models.OneToOneField(Florist, related_name='pedido_3', verbose_name="Pedido 3", blank=True, null=True)
@@ -378,7 +379,7 @@ class Work(models.Model):
         (CLOSED, 'Cerrado'),
     )
     a24h = models.CharField(verbose_name="A24H", max_length=50, unique=True, default=timezone.now)
-    employed = models.ForeignKey(User, verbose_name="Empleado", blank=True, null=True)
+    employed = models.ForeignKey(User, related_name="works", verbose_name="Empleado", blank=True, null=True)
     deceased = models.OneToOneField(Deceased, verbose_name="Fallecido", blank=True, null=True)
     move = models.OneToOneField(Move, verbose_name="Traslados", blank=True, null=True)
     morgue = models.OneToOneField(Morgue, verbose_name="Tanatorio", blank=True, null=True)
@@ -386,7 +387,7 @@ class Work(models.Model):
     cemetery = models.OneToOneField(Cemetery, verbose_name="Cementerio/Crematorio", blank=True, null=True)
     florist_work = models.OneToOneField(FloristWork, verbose_name="Floristería", blank=True, null=True)
 
-    sons_and_beneficiaries = models.ManyToManyField(SonOrBeneficiary, verbose_name="Hijos y beneficiarios",
+    sons_and_beneficiaries = models.ManyToManyField(SonOrBeneficiary, related_name="works", verbose_name="Hijos y beneficiarios",
                                                     blank=True)
 
     taxi = models.OneToOneField(Taxi, verbose_name="Taxi", blank=True, null=True)
@@ -396,7 +397,8 @@ class Work(models.Model):
     tap = models.OneToOneField(Tap, verbose_name="Tapa frigorífica", blank=True, null=True)
     tombstone = models.OneToOneField(Tombstone, verbose_name="Lápida", blank=True, null=True)
 
-    declarant = models.ForeignKey(Declarant, verbose_name="Contratante declarante", blank=True, null=True)
+    declarant = models.ForeignKey(Declarant, related_name="works", verbose_name="Contratante declarante", blank=True,
+                                  null=True)
 
     status = models.CharField(verbose_name="Estado", max_length=10, choices=STATES, default=OPEN)
     creation_date = models.DateField(verbose_name="Fecha de creación", default=timezone.now)
